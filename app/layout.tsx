@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Butter Chicken | Tandoori Kitchen',
+  title: 'Butter My Chicken | Tandoori Kitchen',
   description: 'Experience our legendary butter chicken - creamy, rich, and unforgettable. A signature dish by Tandoori Kitchen.',
   keywords: ['butter chicken', 'tandoori', 'indian food', 'tandoori kitchen', 'indian restaurant'],
   openGraph: {
-    title: 'Butter Chicken | Tandoori Kitchen',
+    title: 'Butter My Chicken | Tandoori Kitchen',
     description: 'Experience our legendary butter chicken - creamy, rich, and unforgettable.',
     type: 'website',
     url: 'https://buttermychicken.com',

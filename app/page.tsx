@@ -2,9 +2,27 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 
 export default function Home() {
+  // Pre-generate random values to avoid hydration mismatch
+  const particles = useMemo(() =>
+    Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      left: `${10 + (i * 6) % 80}%`,
+      top: `${5 + (i * 7) % 90}%`,
+      duration: 3 + (i % 3),
+      delay: i * 0.2,
+    })), []
+  )
+
+  const drips = useMemo(() =>
+    Array.from({ length: 7 }, (_, i) => ({
+      id: i,
+      width: 8 + (i * 2) % 8,
+      height: 20 + (i * 5) % 30,
+    })), []
+  )
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -16,21 +34,20 @@ export default function Home() {
   const secondImageScale = useTransform(scrollYProgress, [0.2, 0.5], [0.8, 1])
   const secondImageOpacity = useTransform(scrollYProgress, [0.2, 0.35], [0, 1])
   const textY = useTransform(scrollYProgress, [0.4, 0.6], [100, 0])
-  const ctaOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1])
 
   return (
     <div ref={containerRef} className="relative">
       {/* Hero Section */}
-      <section className="h-screen relative overflow-hidden flex items-center justify-center">
+      <section className="min-h-screen relative overflow-hidden flex items-center justify-center py-20">
         {/* Animated background gradient */}
         <motion.div
-          className="absolute inset-0 bg-gradient-radial from-primary/20 via-charcoal to-charcoal"
+          className="absolute inset-0"
           animate={{
             background: [
-              'radial-gradient(circle at 50% 50%, rgba(255, 77, 0, 0.2) 0%, #1C1C1C 50%, #1C1C1C 100%)',
-              'radial-gradient(circle at 30% 70%, rgba(255, 77, 0, 0.3) 0%, #1C1C1C 50%, #1C1C1C 100%)',
-              'radial-gradient(circle at 70% 30%, rgba(255, 77, 0, 0.2) 0%, #1C1C1C 50%, #1C1C1C 100%)',
-              'radial-gradient(circle at 50% 50%, rgba(255, 77, 0, 0.2) 0%, #1C1C1C 50%, #1C1C1C 100%)',
+              'radial-gradient(circle at 50% 50%, rgba(255, 77, 0, 0.15) 0%, #1C1C1C 50%, #1C1C1C 100%)',
+              'radial-gradient(circle at 30% 70%, rgba(255, 77, 0, 0.2) 0%, #1C1C1C 50%, #1C1C1C 100%)',
+              'radial-gradient(circle at 70% 30%, rgba(255, 77, 0, 0.15) 0%, #1C1C1C 50%, #1C1C1C 100%)',
+              'radial-gradient(circle at 50% 50%, rgba(255, 77, 0, 0.15) 0%, #1C1C1C 50%, #1C1C1C 100%)',
             ]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
@@ -38,22 +55,22 @@ export default function Home() {
 
         {/* Floating particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((p) => (
             <motion.div
-              key={i}
+              key={p.id}
               className="absolute w-1 h-1 bg-primary/40 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: p.left,
+                top: p.top,
               }}
               animate={{
                 y: [-20, 20, -20],
                 opacity: [0.2, 0.6, 0.2],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: p.duration,
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: p.delay,
               }}
             />
           ))}
@@ -63,53 +80,105 @@ export default function Home() {
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative z-10 text-center px-4"
         >
-          {/* Animated badge */}
+          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-smoke/60 backdrop-blur-md rounded-full border border-primary/30 mb-8"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-smoke/60 backdrop-blur-md rounded-full border border-primary/30 mb-8"
           >
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-primary"
-            >
-              *
-            </motion.span>
+              className="w-2 h-2 bg-primary rounded-full"
+            />
             <span className="text-cream/80 text-sm tracking-wide">TANDOORI KITCHEN</span>
           </motion.div>
 
-          {/* Main title with staggered animation */}
-          <motion.h1
-            className="font-heading text-6xl md:text-8xl lg:text-9xl text-cream mb-6 leading-none tracking-tight"
+          {/* Dripping Graffiti Logo */}
+          <motion.div
+            className="relative mb-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <motion.span
-              className="block"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              BUTTER
-            </motion.span>
-            <motion.span
-              className="block text-transparent bg-clip-text bg-fire-gradient"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              style={{
-                textShadow: '0 0 80px rgba(255, 77, 0, 0.5)',
-              }}
-            >
-              CHICKEN
-            </motion.span>
-          </motion.h1>
+            <div className="logo-container relative inline-block">
+              {/* Main Logo Text */}
+              <div className="flex flex-col items-center leading-none" style={{ fontFamily: "'Lilita One', cursive" }}>
+                <motion.span
+                  className="logo-text text-5xl md:text-7xl lg:text-8xl"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
+                  BUTTER
+                </motion.span>
+                <motion.span
+                  className="logo-text text-4xl md:text-5xl lg:text-6xl -mt-1 md:-mt-2"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                >
+                  MY
+                </motion.span>
+                <motion.span
+                  className="logo-text text-6xl md:text-8xl lg:text-9xl -mt-1 md:-mt-3"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.7, duration: 0.5 }}
+                >
+                  CHICKEN
+                </motion.span>
+              </div>
+
+              {/* Drips */}
+              <div className="absolute -bottom-4 md:-bottom-6 left-0 right-0 flex justify-around px-4 md:px-8">
+                {drips.map((d) => (
+                  <motion.div
+                    key={d.id}
+                    className="drip"
+                    style={{
+                      width: `${d.width}px`,
+                      background: 'linear-gradient(to bottom, #FF8C00, #FF6B00)',
+                      borderRadius: '0 0 50% 50%',
+                      boxShadow: '-2px 0 0 #000, 2px 0 0 #000, 0 2px 0 #000',
+                    }}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: `${d.height}px`, opacity: 1 }}
+                    transition={{ delay: 1 + d.id * 0.1, duration: 0.5 }}
+                  />
+                ))}
+              </div>
+
+              {/* Shine/Highlight effects */}
+              <motion.div
+                className="absolute top-2 left-1/4 w-2 h-2 md:w-3 md:h-3 bg-white rounded-full opacity-80 blur-[1px]"
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <motion.div
+                className="absolute top-4 left-1/3 w-1 h-1 md:w-2 md:h-2 bg-white rounded-full opacity-60"
+                animate={{ opacity: [0.4, 0.8, 0.4] }}
+                transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
+              />
+              <motion.div
+                className="absolute top-6 right-1/4 w-2 h-2 md:w-3 md:h-3 bg-white rounded-full opacity-70 blur-[1px]"
+                animate={{ opacity: [0.5, 0.9, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+              />
+              <motion.div
+                className="absolute top-3 right-1/3 w-1 h-1 bg-white rounded-full opacity-50"
+                animate={{ opacity: [0.3, 0.7, 0.3] }}
+                transition={{ duration: 1.8, repeat: Infinity, delay: 0.2 }}
+              />
+            </div>
+          </motion.div>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
+            transition={{ duration: 0.8, delay: 1 }}
             className="text-cream/60 text-lg md:text-xl max-w-md mx-auto mb-12 font-light tracking-wide"
           >
             Creamy. Rich. Unforgettable.
@@ -120,7 +189,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            className="mt-8"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -160,9 +229,7 @@ export default function Home() {
 
               {/* Floating accent */}
               <motion.div
-                animate={{
-                  rotate: [0, 360],
-                }}
+                animate={{ rotate: [0, 360] }}
                 transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                 className="absolute -top-4 -right-4 w-24 h-24 bg-fire-gradient rounded-full opacity-20 blur-xl"
               />
@@ -177,6 +244,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
                 className="text-primary font-medium tracking-widest text-sm mb-4 block"
               >
                 THE SIGNATURE DISH
@@ -186,6 +254,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
                 className="font-heading text-4xl md:text-5xl lg:text-6xl text-cream mb-6"
               >
                 A Legend<br />
@@ -196,6 +265,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
                 className="text-cream/60 text-lg leading-relaxed mb-8 max-w-lg"
               >
                 Tender chicken simmered in a velvety tomato-cream sauce,
@@ -207,9 +277,10 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
                 className="flex flex-wrap gap-4 justify-center lg:justify-start"
               >
-                {['Creamy', 'Aromatic', 'Authentic'].map((tag, i) => (
+                {['Creamy', 'Aromatic', 'Authentic'].map((tag) => (
                   <motion.span
                     key={tag}
                     whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 77, 0, 0.2)' }}
@@ -296,7 +367,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats/Features Section */}
+      {/* Stats Section */}
       <section className="py-32 relative overflow-hidden">
         <div className="container mx-auto px-4">
           <motion.div
@@ -337,53 +408,47 @@ export default function Home() {
       <section className="py-32 relative overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-fire-gradient opacity-10"
-          animate={{
-            opacity: [0.05, 0.15, 0.05],
-          }}
+          animate={{ opacity: [0.05, 0.15, 0.05] }}
           transition={{ duration: 4, repeat: Infinity }}
         />
 
         <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            style={{ opacity: ctaOpacity }}
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="font-heading text-4xl md:text-6xl text-cream mb-6"
           >
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="font-heading text-4xl md:text-6xl text-cream mb-6"
-            >
-              Ready to Experience<br />
-              <span className="text-transparent bg-clip-text bg-fire-gradient">Butter Chicken?</span>
-            </motion.h2>
+            Ready to Experience<br />
+            <span className="text-transparent bg-clip-text bg-fire-gradient">Butter Chicken?</span>
+          </motion.h2>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="text-cream/60 text-xl mb-12 max-w-xl mx-auto"
-            >
-              Visit Tandoori Kitchen and discover why our butter chicken
-              keeps customers coming back for more.
-            </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-cream/60 text-xl mb-12 max-w-xl mx-auto"
+          >
+            Visit Tandoori Kitchen and discover why our butter chicken
+            keeps customers coming back for more.
+          </motion.p>
 
-            <motion.a
-              href="https://tandoorikitchenco.com/order-online/butter-chicken/"
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block px-12 py-5 bg-fire-gradient text-white font-bold text-lg rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50 transition-shadow"
-            >
-              Order Butter Chicken
-            </motion.a>
-          </motion.div>
+          <motion.a
+            href="https://tandoorikitchenco.com/order-online/butter-chicken/"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-block px-12 py-5 bg-fire-gradient text-white font-bold text-lg rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50 transition-shadow"
+          >
+            Order Butter Chicken
+          </motion.a>
         </div>
       </section>
 

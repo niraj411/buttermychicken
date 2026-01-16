@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800;900&family=Lilita+One&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -60,4 +60,22 @@ a:focus-visible,
 button:focus-visible {
   outline: 2px solid #FF4D00;
   outline-offset: 2px;
+}
+
+/* Dripping Logo Styles */
+.logo-text {
+  background: linear-gradient(to bottom, #FFD700 0%, #FFC107 40%, #FF8C00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 3px #000;
+  filter: drop-shadow(3px 3px 0 #000) drop-shadow(4px 4px 8px rgba(0,0,0,0.5));
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .logo-text {
+    -webkit-text-stroke: 5px #000;
+    filter: drop-shadow(4px 4px 0 #000) drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+  }
 }
