@@ -1,0 +1,16 @@
+{
+  "name": "Butter My Chicken | Tandoori Kitchen",
+  "short_name": "Butter Chicken",
+  "description": "Experience our legendary butter chicken - creamy, rich, and unforgettable.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1C1C1C",
+  "theme_color": "#FF4D00",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="butterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="50%" stop-color="#FFC107"/>
+      <stop offset="100%" stop-color="#FF8C00"/>
+    </linearGradient>
+    <linearGradient id="bowlGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E0E0E0"/>
+    </linearGradient>
+  </defs>
+  <!-- Bowl -->
+  <ellipse cx="50" cy="70" rx="40" ry="20" fill="url(#bowlGradient)" stroke="#333" stroke-width="2"/>
+  <path d="M10 70 Q10 45 50 45 Q90 45 90 70" fill="url(#bowlGradient)" stroke="#333" stroke-width="2"/>
+  <!-- Butter Chicken Curry -->
+  <ellipse cx="50" cy="55" rx="35" ry="15" fill="url(#butterGradient)"/>
+  <!-- Steam lines -->
+  <path d="M30 35 Q35 25 30 15" fill="none" stroke="#FFD700" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <path d="M50 30 Q55 20 50 10" fill="none" stroke="#FFD700" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <path d="M70 35 Q75 25 70 15" fill="none" stroke="#FFD700" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <!-- Chicken pieces -->
+  <ellipse cx="40" cy="53" rx="8" ry="5" fill="#E65100" opacity="0.8"/>
+  <ellipse cx="58" cy="56" rx="7" ry="4" fill="#E65100" opacity="0.8"/>
+  <ellipse cx="50" cy="50" rx="6" ry="4" fill="#E65100" opacity="0.9"/>
+</svg>
